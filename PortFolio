@@ -1,0 +1,64 @@
+package Stock_Reading_Platform;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class PortFolio {
+    private Map<Stock, Integer> stockHoldings;
+    private double cashBalance;
+
+    public PortFolio(double initialBalance) {
+        this.stockHoldings = new HashMap<>();
+        this.cashBalance = initialBalance;
+    }
+
+    // Method to buy stock
+    public boolean buyStock(Stock stock, int quantity) {
+        double totalCost = stock.getCurrentPrice() * quantity;
+        if (cashBalance >= totalCost) {
+            stockHoldings.put(stock, stockHoldings.getOrDefault(stock, 0) + quantity);
+            cashBalance -= totalCost;
+            return true;
+        } else {
+            System.out.println("Insufficient balance to buy " + quantity + " shares of " + stock.getSymbol());
+            return false;
+        }
+    }
+
+    // Method to sell stock
+    public boolean sellStock(Stock stock, int quantity) {
+        if (stockHoldings.containsKey(stock) && stockHoldings.get(stock) >= quantity) {
+            double totalValue = stock.getCurrentPrice() * quantity;
+            stockHoldings.put(stock, stockHoldings.get(stock) - quantity);
+            cashBalance += totalValue;
+            return true;
+        } else {
+            System.out.println("Not enough shares to sell " + quantity + " shares of " + stock.getSymbol());
+            return false;
+        }
+    }
+
+    // Display portfolio details
+    public void displayPortfolio() {
+        System.out.println("Your Portfolio:");
+        double totalStockValue = 0;
+        for (Map.Entry<Stock, Integer> entry : stockHoldings.entrySet()) {
+            Stock stock = entry.getKey();
+            int quantity = entry.getValue();
+            double stockValue = stock.getCurrentPrice() * quantity;
+            totalStockValue += stockValue;
+            System.out.println(quantity + " shares of " + stock.getSymbol() + " at $" + stock.getCurrentPrice() + " = $" + stockValue);
+        }
+        System.out.println("Total Stock Value: $" + totalStockValue);
+        System.out.println("Cash Balance: $" + cashBalance);
+        System.out.println("Total Portfolio Value: $" + (totalStockValue + cashBalance));
+    }
+
+    public double getCashBalance() {
+        return cashBalance;
+    }
+
+    public void addCash(double amount) {
+        cashBalance += amount;
+    }
+}
