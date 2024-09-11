@@ -1,0 +1,71 @@
+package Stock_Reading_Platform;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TradingSystem {
+    private List<Stock> market;
+    private Portfolio portfolio;
+
+    public TradingSystem() {
+        portfolio = new Portfolio(10000); // Starting with $10,000 balance
+        market = new ArrayList<>();
+
+        // Initialize some stocks
+        market.add(new Stock("AAPL", "Apple", 150));
+        market.add(new Stock("GOOGL", "Google", 2800));
+        market.add(new Stock("AMZN", "Amazon", 3500));
+        market.add(new Stock("TSLA", "Tesla", 900));
+    }
+
+    // Display current market data
+    public void displayMarketData() {
+        System.out.println("Market Data:");
+        for (Stock stock : market) {
+            System.out.println(stock);
+        }
+    }
+
+    // Buy stock
+    public void buyStock(String symbol, int quantity) {
+        Stock stock = findStockBySymbol(symbol);
+        if (stock != null) {
+            portfolio.buyStock(stock, quantity);
+        } else {
+            System.out.println("Stock not found.");
+        }
+    }
+
+    // Sell stock
+    public void sellStock(String symbol, int quantity) {
+        Stock stock = findStockBySymbol(symbol);
+        if (stock != null) {
+            portfolio.sellStock(stock, quantity);
+        } else {
+            System.out.println("Stock not found.");
+        }
+    }
+
+    // Track portfolio performance
+    public void trackPortfolioPerformance() {
+        portfolio.displayPortfolio();
+    }
+
+    // Simulate market change
+    public void simulateMarketChange() {
+        for (Stock stock : market) {
+            stock.simulatePriceChange();
+        }
+        System.out.println("Market prices updated.");
+    }
+
+    // Helper method to find a stock by its symbol
+    private Stock findStockBySymbol(String symbol) {
+        for (Stock stock : market) {
+            if (stock.getSymbol().equalsIgnoreCase(symbol)) {
+                return stock;
+            }
+        }
+        return null;
+    }
+}
